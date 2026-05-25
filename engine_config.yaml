@@ -1,0 +1,16 @@
+# 引擎级配置
+# 环境/批次/重试/质量阈值设置
+
+environment:
+  name: development
+  region: us-west-2
+
+batch:
+  max_retries: 3
+  timeout_minutes: 30
+  parallel_workers: 4
+
+quality_thresholds:
+  min_completion_rate: 0.95
+  max_error_rate: 0.05
+  freshness_hours: 24
