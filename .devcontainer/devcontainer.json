@@ -1,0 +1,40 @@
+{
+  "name": "Credit Risk ELT Engine",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/app",
+  "remoteEnv": {
+    "DATABASE_URL": "postgresql://credit_dev:devpass123@postgres:5432/credit_risk_db",
+    "PGPASSWORD": "devpass123",
+    "DBT_PROFILES_DIR": "/app/dbt_project/.dbt"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "innoverio.vscode-dbt-power-user",
+        "ms-azuretools.vscode-docker",
+        "github.copilot",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.formatting.provider": "black",
+        "editor.formatOnSave": true,
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "dbt.terminal.executable": "dbt",
+        "dbt.profilesDir": "/app/dbt_project/.dbt",
+        "dbt.projectDir": "/app/dbt_project"
+      }
+    }
+  },
+  "postCreateCommand": "pip install --upgrade pip && pip install pandas faker sqlalchemy psycopg2-binary numpy dbt-core dbt-snowflake pre-commit black && echo '✅ 依赖安装完成，环境就绪'",
+  "forwardPorts": [5432],
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  }
+}

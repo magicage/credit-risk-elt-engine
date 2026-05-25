@@ -1,3 +1,9 @@
+### 🐳 Local Development Setup
+This project uses Docker Compose + Dev Containers for a reproducible environment.
+- `docker-compose.yml` → Dev services (Postgres, Dev Container)
+- `.devcontainer/` → VS Code integration
+- Run: `docker compose up -d && code .`
+
 # 🏦 Credit Risk ELT Engine
 
 A production-grade, configuration-driven ELT framework for credit risk analytics. Built with `dbt` for declarative transformation, `Snowpark` for vectorized feature engineering, and `Airflow` for orchestration & observability. Designed for testability, scalability, and cross-team collaboration.

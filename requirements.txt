@@ -1,0 +1,10 @@
+--index-url https://mirrors.aliyun.com/pypi/simple/
+pandas
+faker
+sqlalchemy
+psycopg2-binary
+numpy
+dbt-core
+dbt-snowflake
+pre-commit
+black

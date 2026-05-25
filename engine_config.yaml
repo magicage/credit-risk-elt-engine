@@ -1,16 +1,24 @@
-# 引擎级配置
-# 环境/批次/重试/质量阈值设置
-
-environment:
-  name: development
-  region: us-west-2
-
-batch:
-  max_retries: 3
-  timeout_minutes: 30
-  parallel_workers: 4
-
-quality_thresholds:
-  min_completion_rate: 0.95
-  max_error_rate: 0.05
-  freshness_hours: 24
+engine:
+  version: "1.0"
+  environment: "dev"
+  
+ingestion:
+  source_type: "postgresql"
+  batch_size: 1000
+  watermark_column: "created_at"
+  
+transformation:
+  dbt_project_dir: "./dbt_project"
+  profiles_dir: "./dbt_project/.dbt"
+  full_refresh_schedule: ["0 0 1 * *"]  # 每月1号全量
+  incremental_filter: "created_at >= '{{ var('run_date') }}' - interval '1 day'"
+  
+quality:
+  freshness_threshold_hours: 24
+  test_fail_action: "alert_and_continue"  # 或 "fail_fast"
+  pd_score_range: [0.001, 0.99]
+  
+observability:
+  log_level: "INFO"
+  metrics_output: "./monitoring/metrics/"
+  alert_channels: ["slack", "email"]
