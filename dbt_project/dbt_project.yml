@@ -21,6 +21,13 @@ models:
     staging:
       +materialized: view
       +tags: ['staging']
+    transformation:
+      +materialized: table
+      +tags: ['transformation']
+      fct_loans:
+        +incremental_strategy: merge
+        +unique_key: loan_id
+        +cluster_by: ["DATE(origination_date)"]
 
 tests:
   credit_risk_elt_engine:

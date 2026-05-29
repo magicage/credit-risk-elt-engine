@@ -5,9 +5,10 @@ sources:
     database: credit_risk_db
     schema: DEV
     description: "Local PostgreSQL mock database for credit risk raw data"
-    freshness:
-      warn_after: { count: 24, period: hour }
-      error_after: { count: 48, period: hour }
+    config:
+      freshness:
+        warn_after: { count: 24, period: hour }
+        error_after: { count: 48, period: hour }
     tables:
       - name: customers
         description: "Raw customer demographic & employment data"
@@ -30,8 +31,9 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('credit_risk_src', 'customers')
-                  field: customer_id
+                  arguments:
+                    to: source('credit_risk_src', 'customers')
+                    field: customer_id
       - name: transactions
         description: "Raw repayment & fee transactions"
         config:
