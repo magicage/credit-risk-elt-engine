@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_loans
+    description: "Standardized loan records with status mapping & audit columns"
+    columns:
+      - name: loan_id
+        description: "Unique loan identifier"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: loan_status
+        description: "Normalized status: active, delinquent, charged_off"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['active', 'delinquent', 'charged_off']
+      - name: pd_score
+        description: "Probability of Default (0.001 ~ 0.99)"
+        tests:
+          - not_null
+      - name: ifrs9_stage
+        description: "IFRS 9 staging: 1, 2, or 3"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3]
+
+  - name: stg_customers
+    description: "Standardized customer demographic data"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: employment_status
+        tests:
+          - accepted_values:
+              values: ['employed', 'self_employed', 'unemployed', 'retired']

@@ -1,0 +1,27 @@
+---
+name: 'credit_risk_elt_engine'
+version: '1.0.0'
+config-version: 2
+
+profile: 'credit_risk_project'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  credit_risk_elt_engine:
+    staging:
+      +materialized: view
+      +tags: ['staging']
+
+tests:
+  credit_risk_elt_engine:
+    +store_failures: true

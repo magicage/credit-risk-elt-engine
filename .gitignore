@@ -1,0 +1,77 @@
+# Credit Risk ELT Engine - Git Ignore Rules
+
+# Env and keys
+.env
+.env.*
+*.pem
+*.key
+*.p12
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Python virtual environments
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# dbt generated files
+dbt_project/target/
+dbt_project/logs/
+dbt_project/dbt_packages/
+dbt_project/.user.yml
+dbt_project/.lock
+!dbt_project/.gitkeep
+
+# Airflow local state
+airflow.cfg
+airflow.db
+*.lock
+.airflow/
+
+# Docker / Compose
+.docker/
+docker-compose.override.yml
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and temp files
+*.tmp
+*.log
+*.bak
+*.orig

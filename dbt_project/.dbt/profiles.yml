@@ -1,0 +1,28 @@
+credit_risk_project:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'ACCOUNTADMIN') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'CREDIT_RISK_DB') }}"
+      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'DEV') }}"
+      threads: 4
+      client_session_keep_alive: False
+      query_tag: "{{ env_var('DBT_QUERY_TAG', 'credit_risk_dev') }}"
+
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'TRANSFORMER') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE_PROD', 'TRANSFORM_WH') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'CREDIT_RISK_DB') }}"
+      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'PROD') }}"
+      threads: 8
+      client_session_keep_alive: False
+      query_tag: "credit_risk_prod"
