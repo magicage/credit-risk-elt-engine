@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: credit_risk_src
     database: credit_risk_db
-    schema: DEV
+    schema: RAW
     description: "Local PostgreSQL mock database for credit risk raw data"
     config:
       freshness:

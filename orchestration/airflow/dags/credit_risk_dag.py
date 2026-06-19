@@ -1,52 +1,50 @@
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
+from airflow.operators.bash import BashOperator
+from airflow.utils.dates import days_ago
+from datetime import timedelta
+import os
 
 default_args = {
-    'owner': 'credit_risk_team',
-    'retries': 3,
+    'owner': 'data_engineer',
+    'retries': 2,
     'retry_delay': timedelta(minutes=5),
-    'start_date': datetime(2026, 1, 1),
+    'execution_timeout': timedelta(hours=1),
+    'email_on_failure': True,  # need to configure Airflow SMTP
 }
 
-dag = DAG(
-    'credit_risk_elt_pipeline',
+DBT_PROJECT_DIR = os.path.expanduser('~/code_repo/credit-risk-elt-engine/dbt_project')
+
+with DAG(
+    dag_id='credit_risk_dbt_pipeline',
     default_args=default_args,
-    description='Credit Risk ELT Pipeline',
-    schedule_interval='0 2 * * *',  # Daily at 2 AM
+    description='Orchestrates dbt build for Credit Risk ELT Engine (Snapshot -> Run -> Test)',
+    schedule_interval='0 2 * * *',  # launch at 02:00 every day
+    start_date=days_ago(1),
     catchup=False,
-)
+    tags=['credit_risk', 'dbt', 'snowflake'],
+    max_active_runs=1,
+) as dag:
 
-def ingestion_task():
-    """Data ingestion phase"""
-    print("Starting data ingestion...")
+    # dbt build seed → snapshot → run → test
+    dbt_build = BashOperator(
+        task_id='dbt_build',
+        bash_command=(
+            f'cd {DBT_PROJECT_DIR} && '
+            'source ../.env && '
+            'dbt build '
+            '--target prod '
+            '--profiles-dir ./.dbt '
+            '--vars \'{"run_date": "{{ ds }}"}\' '
+            '--no-partial-parse'
+        ),
+        env={**os.environ, 'PYTHONPATH': os.path.join(DBT_PROJECT_DIR, '..')},
+    )
 
-def transformation_task():
-    """Data transformation phase"""
-    print("Starting data transformation...")
+    #
+    check_freshness = BashOperator(
+        task_id='check_source_freshness',
+        bash_command=f'cd {DBT_PROJECT_DIR} && source ../.env && dbt source freshness --profiles-dir ./.dbt --target prod',
+        retries=1,
+    )
 
-def serving_task():
-    """Data serving phase"""
-    print("Starting data serving...")
-
-# Define tasks
-t1 = PythonOperator(
-    task_id='ingestion',
-    python_callable=ingestion_task,
-    dag=dag,
-)
-
-t2 = PythonOperator(
-    task_id='transformation',
-    python_callable=transformation_task,
-    dag=dag,
-)
-
-t3 = PythonOperator(
-    task_id='serving',
-    python_callable=serving_task,
-    dag=dag,
-)
-
-# Define dependencies
-t1 >> t2 >> t3
+    dbt_build >> check_freshness

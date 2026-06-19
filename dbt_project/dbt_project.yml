@@ -19,9 +19,11 @@ clean-targets:
 models:
   credit_risk_elt_engine:
     staging:
+      +schema: staging          #
       +materialized: view
       +tags: ['staging']
     transformation:
+      +schema: transformation   #
       +materialized: table
       +tags: ['transformation']
       fct_loans:
