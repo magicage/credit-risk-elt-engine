@@ -19,7 +19,7 @@ select
     employment_status,
     annual_income,
     ingested_at,
-    dbt_updated_at::timestamp_ntz as source_updated_at  -- 👈 消除类型警告，对齐 Snowflake 微分区规范
+    dbt_updated_at::timestamp_ntz as source_updated_at  -- renaming dbt's internal updated_at to source_updated_at for clarity
 from {{ ref('stg_customers') }}
 
 {% endsnapshot %}

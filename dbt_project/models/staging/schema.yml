@@ -30,3 +30,24 @@ models:
           - accepted_values:
               arguments:
                 values: ['employed', 'self_employed', 'unemployed', 'retired']
+
+  - name: stg_fraud_logs
+    columns:
+      - name: log_id
+        tests: [unique, not_null]
+      - name: customer_id
+        tests: [not_null]
+      - name: geo_risk_score
+        tests:
+          - not_null
+
+  - name: stg_fraud_events
+    columns:
+      - name: log_id
+        tests: [not_null]
+      - name: event_action
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['login', 'apply_loan', 'change_password']
